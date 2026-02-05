@@ -140,32 +140,27 @@ Open `.github/prompts/multi-agent-task.prompt.md` and fill in:
 
 Unlike traditional setups with preset agent types, Wiggum **generates agents on-the-fly** and **iterates until objectives are met**:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ ITERATION 1                                                                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 🔧 Backend Engineer writes authentication module                             │
-│     ↓                                                                        │
-│ 🔍 Code Reviewer evaluates against objectives                               │
-│     → O1: Handles null input              ✅ PASS                           │
-│     → O2: Uses bcrypt for passwords       ✅ PASS                           │
-│     → O3: JWT refresh token rotation      ❌ FAIL (missing)                 │
-│     → O4: Rate limiting on login          ❌ FAIL (not implemented)         │
-│                                                                              │
-│ Verdict: CONTINUE (2/4 objectives met)                                      │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ ITERATION 2                                                                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 🔧 Backend Engineer reads review, implements missing features                │
-│     ↓                                                                        │
-│ 🔍 Code Reviewer re-evaluates                                               │
-│     → O1: Handles null input              ✅ PASS                           │
-│     → O2: Uses bcrypt for passwords       ✅ PASS                           │
-│     → O3: JWT refresh token rotation      ✅ PASS (fixed)                   │
-│     → O4: Rate limiting on login          ✅ PASS (fixed)                   │
-│                                                                              │
-│ Verdict: COMPLETE ✅                                                         │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph iter1["🔄 ITERATION 1"]
+        A1[🔧 Backend Engineer<br/>writes auth module] --> B1[🔍 Code Reviewer<br/>evaluates objectives]
+        B1 --> C1{All objectives<br/>pass?}
+        C1 -->|"❌ 2/4 passed"| D1[O1: Null handling ✅<br/>O2: bcrypt ✅<br/>O3: JWT refresh ❌<br/>O4: Rate limiting ❌]
+    end
+    
+    D1 --> iter2
+    
+    subgraph iter2["🔄 ITERATION 2"]
+        A2[🔧 Backend Engineer<br/>reads review, fixes issues] --> B2[🔍 Code Reviewer<br/>re-evaluates]
+        B2 --> C2{All objectives<br/>pass?}
+        C2 -->|"✅ 4/4 passed"| D2[O1: Null handling ✅<br/>O2: bcrypt ✅<br/>O3: JWT refresh ✅<br/>O4: Rate limiting ✅]
+    end
+    
+    D2 --> E[✅ COMPLETE]
+    
+    style iter1 fill:#fff3cd,stroke:#ffc107
+    style iter2 fill:#d4edda,stroke:#28a745
+    style E fill:#28a745,color:#fff
 ```
 
 ### Objective-Driven, Not Iteration-Limited
