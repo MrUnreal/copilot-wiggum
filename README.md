@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Multi-Agent Orchestrator for GitHub Copilot</strong><br>
-  <em>"I'm helping!"</em>
+  <em>"I'm helping!"</em> 👋
 </p>
 
 <p align="center">
@@ -20,16 +20,20 @@
 
 ## 🍩 What is this?
 
+> *"My cat's breath smells like cat food."* — Ralph Wiggum
+
 Copilot Wiggum is a **multi-agent orchestration system** for GitHub Copilot. It breaks down complex tasks into specialized sub-tasks, delegates them to expert agents, and synthesizes the results.
 
-Think of it as Chief Wiggum managing a squad of specialist officers — each one handles their part, and the chief brings it all together.
+Think of Ralph trying to help but accidentally being useful — he doesn't know *how* he's helping, but somehow the task gets done. Each little helper does their part, and together they make something that works. *"I'm learnding!"*
 
 ## ⚡ Quick Start
+
+> *"Me fail English? That's unpossible!"* — Ralph, on software complexity
 
 ### 1. Copy to your repo
 
 ```bash
-# Clone this repo
+# Clone this repo (Ralph found it!)
 git clone git@github.com:MrUnreal/copilot-wiggum.git
 
 # Copy the .github folder to your project
@@ -48,7 +52,7 @@ your-project/
     └── copilot-instructions.md      # Auto-applied instructions
 ```
 
-That's it! No preset agent configurations needed — the orchestrator generates specialized agents dynamically based on what each task requires.
+That's it! No preset agent configurations needed — the orchestrator generates specialized agents dynamically based on what each task requires. *"I picked it! I picked it!"*
 
 ### 3. Use it
 
@@ -59,12 +63,14 @@ In VS Code with GitHub Copilot Chat, type:
 ```
 
 That's it! The orchestrator will:
-1. Break down the task
+1. Break down the task (*"I'm a brick!"*)
 2. Spawn specialized agents (research, backend, frontend, etc.)
-3. Coordinate via shared memory
+3. Coordinate via shared memory (*"They taste like burning"*)
 4. Synthesize the final result
 
 ## 🧠 How It Works
+
+> *"The doctor said I wouldn't have so many nosebleeds if I kept my finger outta there."* — Ralph, on debugging
 
 ```mermaid
 flowchart TD
@@ -93,6 +99,8 @@ flowchart TD
 
 ### Objective-Based Loops
 
+> *"When I grow up, I'm going to Bovine University!"* — Ralph, setting objectives
+
 Instead of fixed iteration counts, Wiggum uses **objectives**:
 
 | ID | Objective | Status |
@@ -105,9 +113,11 @@ The loop continues until all objectives pass — not after N iterations.
 
 ### Resumeable State
 
-All state is persisted to `/memories/`. If a session ends mid-task, the next session can resume exactly where it left off.
+All state is persisted to `/memories/`. If a session ends mid-task, the next session can resume exactly where it left off. *"I remember my first thought ever!"*
 
 ## 📖 Usage
+
+> *"Hi, Super Nintendo Chalmers!"* — Ralph, invoking agents
 
 ### Option 1: Invoke the Agent
 
@@ -135,6 +145,8 @@ Open `.github/prompts/multi-agent-task.prompt.md` and fill in:
 ```
 
 ## 🤖 Dynamic Agents
+
+> *"I bent my wookiee."* — Ralph, on code refactoring
 
 Unlike traditional setups with preset agent types, Wiggum **generates agents on-the-fly** and **iterates until objectives are met**:
 
@@ -171,6 +183,8 @@ The orchestrator doesn't stop after 3 tries. It continues until **all objectives
 | ✅ **Objective-based** | "Keep going until tests pass, security is verified, and code review approves" |
 
 ### Any Specialist You Need
+
+> *"That's where I saw the leprechaun. He told me to burn things."* — Ralph, on specialist selection
 
 The orchestrator spawns whatever expert the task requires:
 
@@ -211,6 +225,8 @@ The orchestrator will:
 
 ## 📝 Memory Structure
 
+> *"I eated the purple berries!"* — Ralph, on persisting state
+
 When running a task, Wiggum creates:
 
 ```
@@ -234,5 +250,6 @@ MIT — Do what you want with it.
 ---
 
 <p align="center">
-  <em>"Bake 'em away, toys!"</em>
+  <em>"I'm a unitard!"</em> 🦄<br>
+  <sub>*"Go banana!"* 🍌</sub>
 </p>
