@@ -138,20 +138,48 @@ Open `.github/prompts/multi-agent-task.prompt.md` and fill in:
 
 ## 🤖 Dynamic Agents
 
-Unlike traditional setups with preset agent types, Wiggum **generates agents on-the-fly** based on what each task needs:
+Unlike traditional setups with preset agent types, Wiggum **generates agents on-the-fly** and **iterates until objectives are met**:
 
 ```
-Task: "Design database schema for users"
-  → Spawns: Database Architect specialist
-
-Task: "Review authentication security"  
-  → Spawns: Security Engineer specialist
-
-Task: "Optimize image loading performance"
-  → Spawns: Performance Engineer specialist
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ITERATION 1                                                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 🔧 Backend Engineer writes authentication module                             │
+│     ↓                                                                        │
+│ 🔍 Code Reviewer evaluates against objectives                               │
+│     → O1: Handles null input              ✅ PASS                           │
+│     → O2: Uses bcrypt for passwords       ✅ PASS                           │
+│     → O3: JWT refresh token rotation      ❌ FAIL (missing)                 │
+│     → O4: Rate limiting on login          ❌ FAIL (not implemented)         │
+│                                                                              │
+│ Verdict: CONTINUE (2/4 objectives met)                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ITERATION 2                                                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 🔧 Backend Engineer reads review, implements missing features                │
+│     ↓                                                                        │
+│ 🔍 Code Reviewer re-evaluates                                               │
+│     → O1: Handles null input              ✅ PASS                           │
+│     → O2: Uses bcrypt for passwords       ✅ PASS                           │
+│     → O3: JWT refresh token rotation      ✅ PASS (fixed)                   │
+│     → O4: Rate limiting on login          ✅ PASS (fixed)                   │
+│                                                                              │
+│ Verdict: COMPLETE ✅                                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+### Objective-Driven, Not Iteration-Limited
+
+The orchestrator doesn't stop after 3 tries. It continues until **all objectives pass**:
+
+| Approach | How it works |
+|----------|--------------|
+| ❌ Fixed iterations | "Review 3 times then give up" |
+| ✅ **Objective-based** | "Keep going until tests pass, security is verified, and code review approves" |
 
 ### Any Specialist You Need
+
+The orchestrator spawns whatever expert the task requires:
 
 | Common Agents | Specialized Agents |
 |---------------|-------------------|
@@ -162,9 +190,11 @@ Task: "Optimize image loading performance"
 | Backend Engineer | Compliance Analyst |
 | QA Engineer | DevRel Writer |
 | Security Engineer | Cost Optimization Analyst |
-| Platform Engineer | ... anything the task needs |
+| Code Reviewer | ... anything the task needs |
 
-The orchestrator crafts each agent's prompt with:
+### Agent Prompt Generation
+
+Each agent gets a custom prompt with:
 - **Mission** — What exactly to accomplish
 - **Context** — What to read from previous agents
 - **Constraints** — Technology/style requirements  
