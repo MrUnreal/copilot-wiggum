@@ -66,42 +66,40 @@ That's it! The orchestrator will:
 
 ## 🧠 How It Works
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     YOU                                      │
-│              "Build feature X"                               │
-└─────────────────────┬───────────────────────────────────────┘
-                      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 ORCHESTRATOR                                 │
-│  • Breaks down task into objectives                         │
-│  • Creates memory structure                                 │
-│  • Spawns specialist agents                                 │
-│  • Tracks progress until objectives met                     │
-└─────────────────────┬───────────────────────────────────────┘
-                      ▼
-┌──────────┬──────────┬──────────┬──────────┬────────────────┐
-│ Research │ Backend  │ Frontend │ Testing  │ Security       │
-│  Agent   │  Agent   │  Agent   │  Agent   │  Agent         │
-└────┬─────┴────┬─────┴────┬─────┴────┬─────┴────┬───────────┘
-     │          │          │          │          │
-     └──────────┴──────────┴──────────┴──────────┘
-                      ▼
-              /memories/project-xxx/
-              (Shared memory for handoffs)
+```mermaid
+flowchart TD
+    A[👤 YOU<br/>'Build feature X'] --> B[🎯 ORCHESTRATOR]
+    
+    B --> C[📋 Break down task<br/>into objectives]
+    C --> D[🤖 Spawn specialist agents]
+    D --> E[Research Agent]
+    D --> F[Backend Agent]
+    D --> G[Frontend Agent]
+    D --> H[Testing Agent]
+    D --> I[Security Agent]
+    
+    E --> J[📁 /memories/project-xxx/<br/>Shared memory for handoffs]
+    F --> J
+    G --> J
+    H --> J
+    I --> J
+    
+    J --> K[✅ Synthesize results]
+    
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style K fill:#c8e6c9
 ```
 
 ### Objective-Based Loops
 
 Instead of fixed iteration counts, Wiggum uses **objectives**:
 
-```markdown
-| ID | Objective                    | Status |
-|----|------------------------------|--------|
-| O1 | Handles null input           | ✅ PASS |
-| O2 | Validates required fields    | ✅ PASS |
-| O3 | Returns proper error format  | 🔄 FAIL |
-```
+| ID | Objective | Status |
+|----|-----------|--------|
+| O1 | Handles null input | ✅ PASS |
+| O2 | Validates required fields | ✅ PASS |
+| O3 | Returns proper error format | 🔄 FAIL |
 
 The loop continues until all objectives pass — not after N iterations.
 
