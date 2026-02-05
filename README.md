@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Copilot Wiggum" width="300">
+  <img src="./assets/logo.png" alt="Copilot Wiggum" width="250">
 </p>
 
 <h1 align="center">🚔 Copilot Wiggum</h1>
@@ -13,7 +13,7 @@
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-how-it-works">How It Works</a> •
   <a href="#-usage">Usage</a> •
-  <a href="#-agent-types">Agent Types</a>
+  <a href="#-dynamic-agents">Dynamic Agents</a>
 </p>
 
 ---
