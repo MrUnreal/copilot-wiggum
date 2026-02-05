@@ -43,16 +43,12 @@ your-project/
 └── .github/
     ├── agents/
     │   └── orchestrator.agent.md    # The orchestrator agent
-    ├── skills/
-    │   ├── research-skill.md        # Research specialist guidelines
-    │   ├── backend-skill.md         # Backend specialist guidelines
-    │   ├── frontend-skill.md        # Frontend specialist guidelines
-    │   ├── testing-skill.md         # Testing specialist guidelines
-    │   └── security-skill.md        # Security specialist guidelines
     ├── prompts/
     │   └── multi-agent-task.prompt.md   # Reusable prompt template
     └── copilot-instructions.md      # Auto-applied instructions
 ```
+
+That's it! No preset agent configurations needed — the orchestrator generates specialized agents dynamically based on what each task requires.
 
 ### 3. Use it
 
@@ -140,33 +136,55 @@ Open `.github/prompts/multi-agent-task.prompt.md` and fill in:
 @Orchestrator Add comprehensive tests for the user service
 ```
 
-## 🤖 Agent Types
+## 🤖 Dynamic Agents
 
-| Agent | Specialty |
-|-------|-----------|
-| **Research** | Best practices, architecture, technology evaluation |
-| **Backend** | API design, server logic, database schemas |
-| **Frontend** | UI components, user flows, responsive design |
-| **Testing** | Unit tests, integration tests, test strategies |
-| **Security** | Auth, authorization, vulnerability analysis |
+Unlike traditional setups with preset agent types, Wiggum **generates agents on-the-fly** based on what each task needs:
 
-Each agent has a skill file in `.github/skills/` that defines its behavior.
+```
+Task: "Design database schema for users"
+  → Spawns: Database Architect specialist
+
+Task: "Review authentication security"  
+  → Spawns: Security Engineer specialist
+
+Task: "Optimize image loading performance"
+  → Spawns: Performance Engineer specialist
+```
+
+### Any Specialist You Need
+
+| Common Agents | Specialized Agents |
+|---------------|-------------------|
+| Research Analyst | Data Pipeline Engineer |
+| API Architect | ML Ops Specialist |
+| Database Architect | Accessibility Expert |
+| Frontend Engineer | Localization Specialist |
+| Backend Engineer | Compliance Analyst |
+| QA Engineer | DevRel Writer |
+| Security Engineer | Cost Optimization Analyst |
+| Platform Engineer | ... anything the task needs |
+
+The orchestrator crafts each agent's prompt with:
+- **Mission** — What exactly to accomplish
+- **Context** — What to read from previous agents
+- **Constraints** — Technology/style requirements  
+- **Output** — Where to write results
+- **Quality standards** — What "good" looks like
 
 ## 🔧 Customization
 
-### Add Your Own Agent Type
+The orchestrator adapts to any project. Just describe what you need:
 
-1. Create `.github/skills/your-agent-skill.md`
-2. Define responsibilities, output format, quality standards
-3. The orchestrator will automatically use it
+```
+@Orchestrator Build a real-time chat system with WebSocket support, 
+focusing on scalability and using our existing Express backend
+```
 
-### Modify Skill Definitions
-
-Edit any file in `.github/skills/` to match your team's standards:
-- Code style preferences
-- Technology stack
-- Testing requirements
-- Documentation format
+The orchestrator will:
+1. Analyze your requirements
+2. Generate the right specialist agents
+3. Include your constraints in each agent's prompt
+4. Coordinate the work through shared memory
 
 ## 📝 Memory Structure
 

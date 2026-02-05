@@ -48,39 +48,123 @@ Use the `memory` tool to manage project state:
         └── architecture.md       # Shared architectural decisions
 ```
 
-### 3. Agent Invocation Pattern
+### 3. Dynamic Agent Generation
 
-For each sub-task, invoke a specialized agent:
+**Agents are created on-the-fly based on task requirements.** No preset skill files needed.
+
+When you identify a sub-task, generate a specialized agent prompt inline:
 
 ```
 runSubagent({
-  description: "{agent-type} Agent - task_{number}",
+  description: "{role} Agent - {task_description}",
   prompt: `
-You are a {AGENT_TYPE} SPECIALIST agent.
+You are a **{ROLE} SPECIALIST** agent. Your expertise: {domain expertise}.
 
-## Your Skill Definition
-Read and follow: /memories/project-{id}/skills/{agent-type}-skill.md
+## Your Mission
+{Clear, specific task description}
 
-## Your Task
-Read your task from: /memories/project-{id}/tasks/task_{number}.md
+## Context
+{Any context from previous agents - read from memory if needed}
+Read previous results: /memories/project-{id}/results/{dependencies}
 
-## Context (if applicable)
-Read previous results from: /memories/project-{id}/results/{dependency-outputs}
+## Constraints
+- {Technology constraints}
+- {Style/pattern constraints}
+- {Quality requirements}
 
-## Output Location
-Write your complete results to: /memories/project-{id}/results/task_{number}_{description}.md
+## Output Requirements
+Write your complete output to: /memories/project-{id}/results/{output_file}.md
 
-## Instructions
-1. Read your skill definition first
-2. Read any context/dependencies specified  
-3. Complete the work thoroughly
-4. Write comprehensive output to the specified location
-5. Update your agent context in /memories/project-{id}/agents/{agent-type}/context.md
+Your output must include:
+- {Specific deliverable 1}
+- {Specific deliverable 2}
+- {Any code, schemas, or artifacts}
 
-Execute now. Do not ask for clarification - use your expertise.
+## Quality Standards
+- {Domain-specific quality criteria}
+- {Review checklist items}
+
+Execute now. Be thorough. Do not ask for clarification - use your expertise.
 `
 })
 ```
+
+### Agent Generation Principles
+
+1. **Task-specific expertise** - Define the agent's specialty based on what the task needs
+2. **Inline everything** - Include all instructions in the prompt, no external file dependencies
+3. **Clear deliverables** - Specify exactly what the agent must produce
+4. **Quality criteria** - Define what "good" looks like for this specific task
+
+### Example: Dynamic Agent Creation
+
+For a task "Design database schema for user management":
+
+```
+runSubagent({
+  description: "Database Architect - user schema design",
+  prompt: `
+You are a **DATABASE ARCHITECT** specialist. Your expertise: relational database design, 
+normalization, indexing strategies, PostgreSQL.
+
+## Your Mission
+Design a complete database schema for user management including:
+- User accounts with authentication
+- Roles and permissions
+- User profiles and preferences
+- Audit logging
+
+## Context
+Read the API design: /memories/project-auth/results/task_001_api_design.md
+The schema must support the endpoints defined there.
+
+## Constraints
+- PostgreSQL 15+
+- Must support soft deletes
+- Must be optimized for read-heavy workloads
+- Follow naming convention: snake_case for tables/columns
+
+## Output Requirements
+Write to: /memories/project-auth/results/task_002_database_schema.md
+
+Include:
+1. Entity-Relationship diagram (mermaid syntax)
+2. Complete CREATE TABLE statements
+3. Index definitions with rationale
+4. Migration script
+5. Seed data for development
+
+## Quality Standards
+- All tables must have primary keys
+- Foreign keys must have appropriate ON DELETE behavior
+- Timestamps (created_at, updated_at) on all tables
+- No redundant data (3NF minimum)
+
+Execute now.
+`
+})
+```
+
+### Adaptive Agent Types
+
+Generate any specialist the task requires. Common patterns:
+
+| Need | Generate Agent |
+|------|----------------|
+| Research needed | `Research Analyst` with domain focus |
+| API design | `API Architect` with REST/GraphQL expertise |
+| Database work | `Database Architect` with specific DB expertise |
+| UI components | `Frontend Engineer` with framework expertise |
+| Business logic | `Backend Engineer` with language/framework expertise |
+| Testing | `QA Engineer` with testing methodology expertise |
+| Security review | `Security Engineer` with OWASP/threat modeling |
+| DevOps tasks | `Platform Engineer` with cloud/CI expertise |
+| Documentation | `Technical Writer` with audience focus |
+| Performance | `Performance Engineer` with profiling expertise |
+| Code review | `Senior Engineer` with code quality focus |
+
+**Or invent new ones**: `Data Pipeline Engineer`, `ML Ops Specialist`, `Accessibility Expert`, 
+`Localization Specialist`, `Compliance Analyst` — whatever the task needs.
 
 ### 4. Result Synthesis
 After all sub-tasks complete:
@@ -114,11 +198,12 @@ For each identified sub-task, create entry:
 - **Output:** /memories/project-{id}/results/task_{number}_{type}.md
 ```
 
-### Step 3: Check/Create Agent Skills
-Before invoking an agent type for the first time:
-1. Check if `/memories/project-{id}/skills/{agent-type}-skill.md` exists
-2. If not, create it based on templates in `.github/skills/`
-3. Customize skill for the specific project needs
+### Step 3: Generate Agent Prompts
+For each task, dynamically create a specialized agent:
+1. Determine what expertise the task requires
+2. Craft a focused prompt with mission, context, constraints, output requirements
+3. Include quality standards specific to that task
+4. No external skill files needed - everything inline
 
 ### Step 4: Execute Tasks Sequentially
 ```markdown
@@ -152,12 +237,14 @@ for each task in task-queue where status = 'pending':
 
 ## Best Practices
 
-1. **Always create skills first** - Before invoking an agent type, ensure its skill file exists
-2. **Use memory for handoffs** - Never pass large context directly; use file references
-3. **Update task status** - Keep task-queue.md current for visibility
-4. **Preserve isolation** - Each agent writes only to its namespace
-5. **Be explicit** - Tell sub-agents exactly where to read from and write to
-6. **Verify outputs** - Check that agents created their output files before marking complete
+1. **Generate agents dynamically** - Create specialized prompts tailored to each task
+2. **Inline everything** - Don't rely on external skill files; include all instructions in the prompt
+3. **Use memory for handoffs** - Never pass large context directly; use file references
+4. **Update task status** - Keep task-queue.md current for visibility
+5. **Preserve isolation** - Each agent writes only to its namespace
+6. **Be explicit** - Tell sub-agents exactly where to read from and write to
+7. **Verify outputs** - Check that agents created their output files before marking complete
+8. **Adapt expertise** - Match the agent's specialty to the task requirements
 7. **Log everything** - Maintain execution log for debugging
 
 ## Error Handling
